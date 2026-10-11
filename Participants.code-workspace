@@ -11,7 +11,9 @@
     "editor.inlayHints.enabled": "off",
     "workbench.editor.enablePreview": false,
     "editor.fontSize": 20,
-    "terminal.integrated.fontSize": 18
+    "terminal.integrated.fontSize": 18,
+    "window.title": "PARTICIPANTS \u2014 ${activeEditorShort}",
+    "workbench.startupEditor": "none"
   },
   "extensions": {
     "recommendations": [
