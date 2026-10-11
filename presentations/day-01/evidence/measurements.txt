@@ -1,0 +1,14 @@
+Measured 2026-10-11
+Toolchain: nightly-2026-07-22
+Target: aarch64-apple-darwin
+
+OriginalHeader size=24 align=8
+OriginalHeader offsets flag=0 timestamp=8 kind=16 payload_len=20
+ReorderedHeader size=16 align=8
+ReorderedHeader offsets timestamp=0 payload_len=8 kind=12 flag=14
+OriginalMessage=72 BoxedMessage=24
+String=24 BoxArray=8 Array=64
+PayloadLen=4 u32=4
+Box<u32>=8 Option<Box<u32>>=8
+NonZeroU8=1 Option<NonZeroU8>=1 Option<u8>=2
+LinkStatus=1 Option<LinkStatus>=1

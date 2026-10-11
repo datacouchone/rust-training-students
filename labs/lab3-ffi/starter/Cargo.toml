@@ -1,0 +1,9 @@
+[package]
+name = "lab3-ffi-starter"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[build-dependencies]
+cc = { workspace = true }

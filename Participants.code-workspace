@@ -1,0 +1,198 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.lineNumbers": "on",
+    "editor.minimap.enabled": false,
+    "editor.wordWrap": "on",
+    "editor.inlayHints.enabled": "off",
+    "workbench.editor.enablePreview": false,
+    "editor.fontSize": 20,
+    "terminal.integrated.fontSize": 18
+  },
+  "extensions": {
+    "recommendations": [
+      "rust-lang.rust-analyzer"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Concepts: check",
+        "type": "process",
+        "command": "cargo",
+        "args": [
+          "+stable",
+          "check",
+          "--all-targets",
+          "--manifest-path",
+          "concepts/Cargo.toml",
+          "--offline"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": [
+          "$rustc"
+        ],
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "clear": true
+        }
+      },
+      {
+        "label": "Concepts: demo",
+        "type": "process",
+        "command": "cargo",
+        "args": [
+          "+stable",
+          "test",
+          "${input:concept}::tests::demo",
+          "--manifest-path",
+          "concepts/Cargo.toml",
+          "--offline"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": [
+          "$rustc"
+        ],
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "clear": true
+        }
+      },
+      {
+        "label": "Concepts: exercise",
+        "type": "process",
+        "command": "cargo",
+        "args": [
+          "+stable",
+          "test",
+          "${input:concept}::tests::exercise",
+          "--manifest-path",
+          "concepts/Cargo.toml",
+          "--offline"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": [
+          "$rustc"
+        ],
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "clear": true
+        }
+      },
+      {
+        "label": "Concepts: all",
+        "type": "process",
+        "command": "cargo",
+        "args": [
+          "+stable",
+          "test",
+          "--manifest-path",
+          "concepts/Cargo.toml",
+          "--offline"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": [
+          "$rustc"
+        ],
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "clear": true
+        }
+      },
+      {
+        "label": "Labs: check selected starter",
+        "type": "process",
+        "command": "cargo",
+        "args": [
+          "check",
+          "-p",
+          "${input:labPackage}"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}/labs"
+        },
+        "problemMatcher": [
+          "$rustc"
+        ],
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "clear": true
+        }
+      },
+      {
+        "label": "Labs: test selected starter",
+        "type": "process",
+        "command": "cargo",
+        "args": [
+          "test",
+          "-p",
+          "${input:labPackage}"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}/labs"
+        },
+        "problemMatcher": [
+          "$rustc"
+        ],
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "clear": true
+        }
+      }
+    ],
+    "inputs": [
+      {
+        "id": "concept",
+        "type": "pickString",
+        "description": "Choose the current concept",
+        "options": [
+          "p00_basics",
+          "p01_layout",
+          "p02_unsafe",
+          "p03_ffi",
+          "p04_typestate",
+          "p05_macros",
+          "p06_atomics",
+          "p07_future",
+          "p08_performance",
+          "p09_debugging"
+        ]
+      },
+      {
+        "id": "labPackage",
+        "type": "pickString",
+        "description": "Select the current advanced lab; its README defines additional checks.",
+        "options": [
+          "lab1-layout-starter",
+          "lab2-minivec-starter",
+          "lab3-ffi-starter",
+          "lab4-typestate-starter",
+          "lab5-derive-macro-starter",
+          "lab6-atomics-starter",
+          "lab7-executor-starter",
+          "lab8-simd-perf-starter",
+          "lab9-core-dump-starter"
+        ]
+      }
+    ]
+  }
+}

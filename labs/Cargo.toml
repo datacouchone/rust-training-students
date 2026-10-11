@@ -1,0 +1,19 @@
+[workspace]
+resolver = "2"
+members = ["lab*/starter", "prereq-check"]
+
+[workspace.dependencies]
+tokio = { version = "1", features = ["full"] }
+syn = { version = "2", features = ["full"] }
+quote = "1"
+proc-macro2 = "1"
+criterion = "0.5"
+cc = "1"
+libc = "0.2"
+trybuild = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+console-subscriber = "0.4"
+
+[profile.release]
+debug = true
