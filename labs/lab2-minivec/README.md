@@ -89,13 +89,12 @@ file) is the exact suite your implementation needs to pass; run
    dangling pointer) free the backing buffer using the *same* `Layout` it
    was allocated with.
 
-8. Run `cargo test -p lab2-minivec-starter` (or copy your implementation
-   into `solution/` and run it there) until all five tests are green.
+8. Run `cargo test -p lab2-minivec-starter` until all five tests are green.
 
 9. Run Miri — this is not optional, it's the actual point of the lab:
 
    ```bash
-   cargo +nightly-2026-07-22 miri test -p lab2-minivec-solution
+   cargo +nightly-2026-07-22 miri test -p lab2-minivec-starter
    ```
 
    A green `cargo test` with a red Miri run means you have a bug (stacked
@@ -106,11 +105,11 @@ file) is the exact suite your implementation needs to pass; run
 
 ## Done-criteria
 
-- [ ] `cargo test -p lab2-minivec-solution` — all 5 tests pass:
+- [ ] `cargo test -p lab2-minivec-starter` — all 5 tests pass:
       `test_push_pop`, `test_growth_amortization`,
       `test_drop_called_exactly_once`, `test_deref_slice`,
       `test_zst_rejected`.
-- [ ] `cargo +nightly-2026-07-22 miri test -p lab2-minivec-solution` —
+- [ ] `cargo +nightly-2026-07-22 miri test -p lab2-minivec-starter` —
       passes with no UB reported.
 - [ ] Every `unsafe` block has a `// SAFETY:` comment that states the
       actual invariant making it sound (references `len`/`cap`/`ptr`

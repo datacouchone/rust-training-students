@@ -40,3 +40,15 @@ Start with [DAY-01.md](DAY-01.md). Open presentations/day-01/index.html for the
 public interactive deck. Extra practice is in exercises/day-01/. Your original
 puzzles remain available after reference answers are published separately.
 
+
+## Fresh-start policy
+
+This repository contains unfinished demo and transfer puzzles and the original
+exercise verification tests. It contains no rehearsal measurement tests, worked
+recording tests, trainer speaking notes, private answer keys or released solutions.
+Some supporting code is intentionally supplied (such as the FFI backend and
+scalar performance baseline). Implement the marked puzzle bodies yourself.
+
+Open `Participants.code-workspace`. Start with `DAY-01.md`; keep your changes
+on a personal branch. Public slides are teaching material and may include short
+worked examples; they are separate from the unfinished assignment files.

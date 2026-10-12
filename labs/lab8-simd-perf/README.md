@@ -48,10 +48,9 @@ false`), so you can flamegraph your own progress the whole way through —
 it compiles from the start, since a `todo!()` body only panics if the
 `simd` half of the bench actually *runs*.
 
-If you get stuck, `solution/src/lib.rs` is the answer key, and its doc
-comments spell out the design reasoning in full (especially the "why
-`&self`" note on `Arena`) — but working through the reasoning yourself
-first is the point of the lab.
+If you get stuck, ask the instructor for a hint. Reference answers will be
+released separately after the workshop; they are not included in this starter
+repository. Work through the reasoning before consulting a reference.
 
 ## Steps
 
@@ -148,7 +147,7 @@ For this lab:
 
 ```bash
 cargo install flamegraph            # one-time
-cargo flamegraph --bench score -p lab8-simd-perf-solution -- --bench
+cargo flamegraph --bench score -p lab8-simd-perf-starter -- --bench
 ```
 
 - The `-- --bench` is passed through to the Criterion binary itself and
@@ -191,12 +190,12 @@ tweaking the benchmark until it appears.
 
 ## Done-criteria
 
-- [ ] `cargo test -p lab8-simd-perf-solution` — all tests pass:
+- [ ] `cargo test -p lab8-simd-perf-starter` — all tests pass:
       `test_simd_matches_scalar_epsilon` (1e-4 relative tolerance, across
       awkward lengths including 0, 1, 7, 8, 9, and a large
       nonzero-remainder length), `test_arena_alignment`,
       `test_arena_reset_reuses`.
-- [ ] `cargo bench -p lab8-simd-perf-solution --no-run` — the Criterion
+- [ ] `cargo bench -p lab8-simd-perf-starter --no-run` — the Criterion
       bench (`benches/score.rs`, scalar vs. simd) compiles. (You don't
       need to run the full bench to be "done" — see Steps 10 / Profiling
       workflow above for actually running it.)
@@ -207,7 +206,7 @@ tweaking the benchmark until it appears.
       states the actual invariant making it sound (bounds/alignment
       arguments tied to `self.offset`/`self.capacity`, not a restatement
       of the line).
-- [ ] `cargo clippy -p lab8-simd-perf-solution --all-targets` is clean.
+- [ ] `cargo clippy -p lab8-simd-perf-starter --all-targets` is clean.
 - [ ] You've generated at least one real flamegraph (scalar or SIMD) and
       can point at a specific frame and say what it tells you.
 - [ ] You can explain, out loud: why does `Arena::alloc` take `&self`
@@ -239,7 +238,7 @@ tweaking the benchmark until it appears.
   instead of `Vec<&LogRecord>` — one arena allocation and zero `Vec`
   allocations per batch instead of one `Vec<&LogRecord>` allocation per
   batch. Benchmark the difference.
-- Run `cargo miri test -p lab8-simd-perf-solution`. The arena tests
+- Run `cargo miri test -p lab8-simd-perf-starter`. The arena tests
   (`test_arena_alignment`, `test_arena_reset_reuses`,
   `test_parse_batch_uses_arena`) pass cleanly — this is a genuinely useful
   check given how much raw-pointer arithmetic `Arena::alloc` does. Miri
