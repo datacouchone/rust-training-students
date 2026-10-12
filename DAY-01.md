@@ -24,14 +24,14 @@ initially, so its default green result does not mean you completed the exercise.
 
 | Session | Core work | Result |
 |---|---|---|
-| 09:00–09:50 | 20-minute introduction, then representation and padding predictions | Distinguish documented layout from a measurement |
-| 10:00–10:50 | Lab 1 reorder/boxing work and debrief | Explain layout plus heap-allocation trade-offs |
-| 11:00–11:50 | MiniVec invariant, empty state and allocation | State which slots contain live T values |
-| 12:00–13:00 | Lunch | |
-| 13:00–13:50 | Growth, push/pop and bounds | Preserve ownership and initialized range |
-| 14:00–14:50 | Drop, slice construction, safety review and Miri | Defend each unsafe operation |
-| 15:00–15:50 | C ownership contract, validation and wrapper work | Distinguish borrowed pointers from owners |
-| 16:00–16:50 | Finish FFI, verify and transfer the reasoning | Explain safe public API and validation limits |
+| 10:00–10:50 | 20-minute introduction, then representation and padding predictions | Distinguish documented layout from a measurement |
+| 11:00–11:50 | Lab 1 reorder/boxing work and debrief | Explain layout plus heap-allocation trade-offs |
+| 12:00–12:50 | MiniVec invariant, empty state and allocation | State which slots contain live T values |
+| 13:00–14:00 | Lunch | |
+| 14:00–14:50 | Growth, push/pop and bounds | Preserve ownership and initialized range |
+| 15:00–15:50 | Drop, slice construction, safety review and Miri | Defend each unsafe operation |
+| 16:00–16:50 | C ownership contract, validation and wrapper work | Distinguish borrowed pointers from owners |
+| 17:00–17:50 | Finish FFI, verify and transfer the reasoning | Explain safe public API and validation limits |
 
 Take a ten-minute break after every teaching session. Each lab spans the
 explanation and practice sessions shown here, rather than only a TODO sprint.

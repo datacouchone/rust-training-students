@@ -19,7 +19,6 @@ The stable mini-puzzles cover a focused entry point for each module. The nine ad
 ## Entry point for this advanced course
 
 Attendees already know Rust: begin delivery with P01 / Module 1, using a
-struct-layout prediction. P00 is optional prerequisite repair and private
-trainer preparation. Keep explanations short, ask for a prediction, then
+struct-layout prediction. P00 is optional prerequisite practice. Keep explanations short, ask for a prediction, then
 run a demo and use the lab to practise reasoning. Fast finishers use the
 lab's stretch goals; allow others to finish the core contract and debrief.

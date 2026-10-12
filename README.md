@@ -30,8 +30,7 @@ can explain why the code works as well as passing its tests.
 ## Entry point for this advanced course
 
 Attendees already know Rust: begin delivery with P01 / Module 1, using a
-struct-layout prediction. P00 is optional prerequisite repair and private
-trainer preparation. Keep explanations short, ask for a prediction, then
+struct-layout prediction. P00 is optional prerequisite practice. Keep explanations short, ask for a prediction, then
 run a demo and use the lab to practise reasoning. Fast finishers use the
 lab's stretch goals; allow others to finish the core contract and debrief.
 
@@ -41,4 +40,3 @@ Start with [DAY-01.md](DAY-01.md). Open presentations/day-01/index.html for the
 public interactive deck. Extra practice is in exercises/day-01/. Your original
 puzzles remain available after reference answers are published separately.
 
-This is the participant repository. It contains no private coaching guide.
