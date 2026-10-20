@@ -66,3 +66,15 @@ publication and concurrent accounting.
 Both directories contain unfinished participant exercises. Run their baseline
 tests first; challenge tests become ready as you complete the marked bodies.
 Follow each README for the pinned toolchain, setup and exact commands.
+
+
+## Lab 4 and Lab 5 advanced challenges
+
+- [Transactional journal](lab4-puzzle/README.md): typestate, cancellation,
+  bounded ownership and lending across physical wrap; six implementation tasks.
+- [Policy-aware derive](lab5-puzzle/README.md): generic bounds, renaming,
+  redaction, hygiene and source-aware diagnostics; four implementation sections.
+
+Each challenge has setup tests, staged acceptance commands, hints, defense
+questions, rejected-caller fixtures and its own timer. Start with the baseline
+commands in each README. The participant implementation sections remain unfinished.
