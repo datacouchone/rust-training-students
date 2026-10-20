@@ -93,3 +93,10 @@ The rejection runner expects compilation failure, not a running panic.
 
 Explain one cancellation trace, one wrapped commit trace and one overlapping
 window trace. A green run is evidence for those tests, not a correctness proof.
+
+
+## Released reference solution
+
+The [complete reference solution](SOLUTION.md) is now available in
+[solution.rs](solution.rs). Your starter remains unfinished. Save your own
+attempt before following the solution guide's replacement and test commands.
