@@ -44,11 +44,25 @@ puzzles remain available after reference answers are published separately.
 ## Fresh-start policy
 
 This repository contains unfinished demo and transfer puzzles and the original
-exercise verification tests. It contains no rehearsal measurement tests, worked
-recording tests, trainer speaking notes, private answer keys or released solutions.
+exercise verification tests. It contains no private trainer speaking notes or
+recording workspaces. Reference solutions, when released, are separate from the
+unfinished starter files; the Day 2 Miri exercises remain unsolved.
 Some supporting code is intentionally supplied (such as the FFI backend and
 scalar performance baseline). Implement the marked puzzle bodies yourself.
 
 Open `Participants.code-workspace`. Start with `DAY-01.md`; keep your changes
 on a personal branch. Public slides are teaching material and may include short
 worked examples; they are separate from the unfinished assignment files.
+
+
+## Day 2: Miri
+
+Start with the [Miri lab](miri-lab/README.md): six memory and concurrency
+investigations, four repair exercises, baseline tests and a worksheet.
+Then try the optional [snapshot handoff capstone](miri-puzzle/README.md):
+eight implementation tasks combining ownership, initialization, atomic
+publication and concurrent accounting.
+
+Both directories contain unfinished participant exercises. Run their baseline
+tests first; challenge tests become ready as you complete the marked bodies.
+Follow each README for the pinned toolchain, setup and exact commands.
