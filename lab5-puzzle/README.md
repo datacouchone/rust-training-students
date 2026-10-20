@@ -124,3 +124,10 @@ compiler tests and diagnostic fixtures; its validation commands are native.
 Point to one predicate, one emitted formatting operation, and the complete
 absence of a redacted field access. Explain why an unsupported input should
 produce a helpful compile error, not a proc-macro panic.
+
+
+## Released advanced reference solution
+
+The [WireSummary solution guide](SOLUTION.md) and [complete solution.rs](solution.rs)
+are available separately. The starter remains unfinished. Save your attempt
+before applying the reference and running the validation commands.
