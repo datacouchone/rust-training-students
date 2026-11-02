@@ -1,0 +1,11 @@
+[package]
+name = "case07-worker"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+tokio = { version = "=1.53.1", features = ["rt", "rt-multi-thread", "macros", "sync", "time", "test-util", "io-util"] }
+
+# Independent of the unfinished participant workspace.
+[workspace]

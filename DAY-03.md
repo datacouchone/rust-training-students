@@ -74,3 +74,5 @@ Primary API references: [Tokio JoinHandle](https://docs.rs/tokio/1.53.1/tokio/ta
 ## Released challenge reference
 
 [06C reference solution and run commands](solutions/case06c-reserve/README.md) are now available in a separate crate. Keep your own challenge attempt in `production-labs/case06c-reserve`.
+
+[Main Lab 07 worker reference and run commands](solutions/case07-worker/README.md) are also released separately from your attempt.
