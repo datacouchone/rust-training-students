@@ -70,3 +70,7 @@ The harness uses a current-thread Tokio runtime, handshakes and a paused virtual
 The four poll/wake/Pin/RawWaker examples remain on slides 28–31. Slide 27 reviews the full worker lab; slides 33–34 review the retry challenge. Those reference reviews still replace the named lab bodies.
 
 Primary API references: [Tokio JoinHandle](https://docs.rs/tokio/1.53.1/tokio/task/struct.JoinHandle.html), [JoinSet](https://docs.rs/tokio/1.53.1/tokio/task/struct.JoinSet.html), and [paused-time behavior](https://docs.rs/tokio/1.53.1/tokio/time/fn.advance.html).
+
+## Released challenge reference
+
+[06C reference solution and run commands](solutions/case06c-reserve/README.md) are now available in a separate crate. Keep your own challenge attempt in `production-labs/case06c-reserve`.

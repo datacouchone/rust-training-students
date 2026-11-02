@@ -1,0 +1,8 @@
+[package]
+name = "case06c-reserve"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+# Run the reference independently of unfinished participant exercises.
+[workspace]
