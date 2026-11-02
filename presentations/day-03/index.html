@@ -332,4 +332,6 @@ for(const el of document.querySelectorAll('[data-visual]')){
  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});draw();
 }
 })();
+
+window.addEventListener("load",resize); if(typeof ResizeObserver!=="undefined"){new ResizeObserver(resize).observe(document.querySelector("#viewport"));}
 </script></body></html>
