@@ -45,3 +45,28 @@ cargo +stable run --manifest-path concepts/Cargo.toml --bin day3_arc
 | 15 | `day3_policy` | Protecting a combined policy check and update with one lock |
 
 The separate poll, wake, Pin and RawWaker models support M7. A successful process exit in a deliberately faulty default model does not mean the policy is correct: compare the printed state with the invariant.
+
+## M7: a separate replacement on slides 19–26
+
+Each slide below has its own Tokio example. Run its default to expose the missing guarantee, then compare the changed version shown by the trainer. These are focused experiments; Lab 07 remains a separate assignment. Each run includes assertions about the expected observation. A deliberately faulty default can exit successfully because its assertion confirms the faulty state.
+
+```sh
+cargo +nightly-2026-07-22 run --manifest-path production-labs/Cargo.toml -p case07-worker --example day3_handle_detach --offline --locked
+```
+
+| Slide | Example | Default → changed observation |
+| --- | --- | --- |
+| 19 | `day3_waiting_resources` | Waiting request incorrectly counted as 0 → its guard keeps it counted as 1 until completion |
+| 20 | `day3_future_lifetime` | Guard inside an unpolled body never exists → captured guard exists at construction and drops with the future |
+| 21 | `day3_handle_detach` | Dropped handle leaves the child active → abort plus join observes cleanup |
+| 22 | `day3_unpolled_guard` | Guard inside an unpolled wrapper never exists → construct it before returning the wrapper |
+| 23 | `day3_abort_observed` | Read immediately after abort → read after awaited termination |
+| 24 | `day3_bounded_spawn` | Spawned/unjoined population reaches 4 → waiting before spawn keeps it at 2 |
+| 25 | `day3_cancel_ledger` | Queued accepted job disappears → reconcile every accepted ID while preserving recorded success |
+| 26 | `day3_deadline_cleanup` | Timeout assertion passes with a child still active → timeout path aborts, joins and checks resource release |
+
+The harness uses a current-thread Tokio runtime, handshakes and a paused virtual clock. It is not a throughput benchmark. The immediate-after-abort observation specifically depends on that controlled runtime; a multithreaded runtime may already have processed cancellation. Faulty examples explicitly clean up after displaying their observation.
+
+The four poll/wake/Pin/RawWaker examples remain on slides 28–31. Slide 27 reviews the full worker lab; slides 33–34 review the retry challenge. Those reference reviews still replace the named lab bodies.
+
+Primary API references: [Tokio JoinHandle](https://docs.rs/tokio/1.53.1/tokio/task/struct.JoinHandle.html), [JoinSet](https://docs.rs/tokio/1.53.1/tokio/task/struct.JoinSet.html), and [paused-time behavior](https://docs.rs/tokio/1.53.1/tokio/time/fn.advance.html).
