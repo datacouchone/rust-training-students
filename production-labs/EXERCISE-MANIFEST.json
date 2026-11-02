@@ -1,0 +1,15 @@
+{
+  "edition": "student",
+  "scope": "Days 3\u20135 only",
+  "task_regions": {
+    "case08c-simd": 3,
+    "case07-worker": 2,
+    "case07c-retry": 2,
+    "case08a-profile": 2,
+    "case06c-reserve": 5,
+    "case06-admission": 3,
+    "case08b-memory": 3,
+    "case09-incident": 2
+  },
+  "reference_included": false
+}

@@ -1,5 +1,32 @@
 # Rust concept puzzles — student edition
 
+## Days 3–5 · production track
+
+Start with the [production course map](production-labs/COURSE.md) and
+[industry problem → module → lab mapping](production-labs/INDUSTRY-MAP.md).
+
+| Day | Student guide and slides | Practice |
+|---|---|---|
+| 3 | [Guide](DAY-03.md) · [Public deck](presentations/day-03/index.html) | M6/M7: two main labs and two standalone challenges |
+| 4 | [Guide](DAY-04.md) · [Public deck](presentations/day-04/index.html) | M8: three independent performance labs |
+| 5 | [Guide](DAY-05.md) · [Public deck](presentations/day-05/index.html) | M9: one incident lab; M10: release review |
+
+Download or clone this repository and open each deck's `index.html` in a browser.
+These decks are self-contained; arrow keys move between slides. The four
+`concepts/src/bin/day3_*.rs` programs are runnable async teaching models, separate
+from the unfinished lab assignments. For example:
+
+```sh
+cargo +stable run --manifest-path concepts/Cargo.toml --bin day3_poll --offline --locked
+```
+
+Follow [production setup](production-labs/README.md#setup-and-commands) before
+running the labs. Fetch dependencies once, then run the supplied baseline checks.
+Acceptance tests exercise unfinished tasks and are expected to fail until repaired.
+No Docker is needed for this track; core capture remains deferred.
+
+
+
 Open `Participants.code-workspace` in VS Code. Start with `COURSE-MAP.md` and the
 current lesson card. Each lesson has an instructor-led demo puzzle followed
 by a separate transfer puzzle for you to solve. Each body marked `demo` or
