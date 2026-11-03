@@ -11,6 +11,8 @@ Start with the [production course map](production-labs/COURSE.md) and
 | 4 | [Guide](DAY-04.md) · [Public deck](presentations/day-04/index.html) | M8: three independent performance labs |
 | 5 | [Guide](DAY-05.md) · [Public deck](presentations/day-05/index.html) | M9: one incident lab; M10: release review |
 
+**Day 4 afternoon:** use [the cumulative demos and focused labs](day04-classroom/README.md) from slide 17. Two 30-minute labs lead into the 90-minute final challenge.
+
 Download or clone this repository and open each deck's `index.html` in a browser.
 These decks are self-contained; arrow keys move between slides. The four
 `concepts/src/bin/day3_*.rs` programs are runnable async teaching models, separate

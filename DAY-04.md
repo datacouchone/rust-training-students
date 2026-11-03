@@ -42,3 +42,7 @@ The starter compiles and passes a single-request real-TCP smoke test. Acceptance
 ## Worked code through slide 16
 
 The instructor has released [the completed examples and Lab 8A reference](DAY-04-THROUGH-SLIDE-16.md). The independent solution leaves your lab attempt in place.
+
+## Four-hour afternoon
+
+Use [the cumulative demos and focused classroom labs](day04-classroom/README.md) for slides 17 onward. Original full labs remain available for follow-up.

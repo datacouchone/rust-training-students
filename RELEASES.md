@@ -13,3 +13,7 @@ Original starter files remain available. References are separate from participan
 ## Earlier published references
 
 [Lab 5 macros](solutions/lab5-macros/README.md) is also available in the solutions directory. Individual puzzle directories may contain previously released reference files.
+
+## 2026-11-03 — Day 4 cumulative afternoon
+
+Updated public Day 4 deck and [classroom setup](day04-classroom/README.md): cumulative memory and scan demos start at stage 0; focused 8B/8C labs and the three-repair final challenge retain their exercise tasks. Earlier worked examples through slide 16, original lab attempts and Day 5 materials are preserved.
