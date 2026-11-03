@@ -35,6 +35,10 @@ Sources: [Cloudflare Pingora](https://blog.cloudflare.com/how-we-built-pingora-t
 
 **What is adapted:** synthetic route policy and telemetry formats, not Pingora routing internals, Discord's cache or Arrow IPC. Local timing is not vendor performance or service p99. A measured rejection of an optimization is a valid outcome.
 
+### Final Day 4 integration challenge
+
+[The gateway gets slow under load](../day04-challenge/README.md) combines Days 1–4 in a new independent service. A client, gateway and upstream use real loopback TCP within one bounded process. The broken starter exhibits admission-accounting corruption, exhausted retry-budget wraparound, lock contention across I/O, restarted deadlines, detached attempts, burst retention and an incomplete telemetry predicate. Participants collect controlled workload evidence, repair the service contract and justify a routing optimization. Cloudflare, Amazon and Discord motivate the engineering questions; this is not their implementation or a reproduction of an actual outage. Upstream application delays are controlled; no WAN, TLS, DNS or Docker is involved.
+
 ## Day 5 — explain an incident and release a defensible repair
 
 **Problem:** a deadline interrupts a frame read and a retry starts at the wrong byte; rejected records still change accounting; new tenants grow retained state. A happy-path test misses these transitions. Shipping a repair requires evidence beyond an error disappearing once.
@@ -54,3 +58,7 @@ Sources: [Tokio read cancellation](https://docs.rs/tokio/latest/tokio/io/trait.A
 ## Evidence boundaries
 
 Sources checked 2026-11-01. Historical engineering articles establish the motivating issue or technique, not a claim about current deployments. Local code uses pinned nightly-2026-07-22 and Tokio 1.53.1. The public latest documentation is a reading reference; tests and pinned source determine the exercise behavior.
+
+### Project Relay — final paired challenge
+
+Amazon EC2’s idempotent request contract motivates the distinction between an exact retry and changed parameters under the same identity. Amazon’s rollback-safety guidance motivates compatibility review before release. Project Relay is an original synthetic service: real loopback TCP, deterministic cancellation regressions, a borrowed C comparison boundary, validated events, bounded async ownership, receipt/account transactions and performance evidence. It is not vendor code or a production outage reproduction. Its in-memory receipts are not durable exactly-once execution. See `../day05-hackathon/README.md` for the 150-minute two-person workflow and explicit Days 1–5 mapping.
