@@ -1,6 +1,6 @@
 # Day 4: four-hour afternoon
 
-25 min memory concepts; 30 min Lab 8B; 35 min scan concepts; 30 min Lab 8C;
+25 min memory concepts; 30 min Lab 8B; 25 min SIMD concepts; 40 min Lab 8C;
 10 min break; 10 min final briefing; 90 min final challenge; 10 min review.
 
 ## One evolving collector — slides 17–22
@@ -52,39 +52,37 @@ as those concepts are added. Portable SIMD uses the installed pinned nightly.
 These columns illustrate Arrow concepts but are not Arrow IPC. The original
 Arrow IPC workbench remains optional follow-up material.
 
-## Focused practice — 30 minutes each
+## Focused practice — 8B 30 minutes; 8C 40 minutes
 
 8B: `labs/8b/src/lib.rs`. push/get are supplied. Implement reset without changing
 its signature or the tests. Check epoch exhaustion before mutation, clear logical
 state, and apply all three retention thresholds.
 
-8C: `labs/8c/src/lib.rs`. Scalar/unrolled/SIMD are supplied. Measure the completed
-demo, implement scan_auto, run all tests, and write a short evidence-based choice.
-There is no required speedup and no prescribed cutoff.
+8C: [build the SIMD kernel](labs/8c/README.md), 40 minutes. Implement the predicate
+mask, widened reduction and scalar tail. Validation and loads are supplied.
+Measure your lab implementation, not the instructor demo. Read [SIMD-GUIDE.md](SIMD-GUIDE.md).
 
 ```sh
 cargo +nightly-2026-07-22 test --manifest-path day04-classroom/labs/8b/Cargo.toml --offline --locked
 cargo +nightly-2026-07-22 test --manifest-path day04-classroom/labs/8c/Cargo.toml --offline --locked
 ```
 
-5 minutes inspect; 20 minutes implement/check/measure; 5 minutes explain.
+8B: 5 minutes inspect; 20 minutes implement/check/measure; 5 minutes explain.
+8C: follow its 40-minute implementation sequence.
 The original full production-labs/8B and 8C attempts remain unchanged.
 
 ## Final challenge — 90 minutes in pairs
 
-Use `day04-classroom/final`, not the original challenge. Admission, retry-budget
-accounting, route indexing and telemetry aggregation are supplied. Three repair
-areas remain: policy lock scope; request deadline and task ownership; buffer
-retention. Keep every original acceptance assertion, transport and metric.
+Use [the SIMD telemetry final](final/README.md). Non-SIMD service repairs are supplied;
+run their examples and interpret outcomes briefly. Implement and measure SIMD on
+Event records, preserve the scalar oracle, then run healthy-simd integration.
 
 ```sh
 python3 day04-classroom/final/run.py baseline
+python3 day04-classroom/final/run.py simd-test
 python3 day04-classroom/final/run.py acceptance
-python3 day04-classroom/final/run.py healthy
-python3 day04-classroom/final/run.py slow
-python3 day04-classroom/final/run.py burst
+python3 day04-classroom/final/run.py simd-bench
+python3 day04-classroom/final/run.py healthy-simd
 ```
 
-15 minutes investigation, 50 minutes repairs, 25 minutes full checks and comparable
-before/after measurements. Report successful outcomes as well as timing. Correct
-code with an honest explanation matters more than a large speedup.
+The original full gateway challenge and original production labs remain available.

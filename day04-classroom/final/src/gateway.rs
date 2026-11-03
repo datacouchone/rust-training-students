@@ -64,8 +64,8 @@ impl Gateway {
         })
     }
     // REPAIR deadline: callers supply the request start, including queue time.
-    pub fn deadline(&self, _start: Instant) -> Instant {
-        Instant::now() + self.budget
+    pub fn deadline(&self, start: Instant) -> Instant {
+        start + self.budget
     }
     async fn attempt(
         self: Arc<Self>,
@@ -83,24 +83,34 @@ impl Gateway {
         req: &Request,
         start: Instant,
     ) -> &'static str {
-        for attempt in 0..3 {
-            if attempt > 0 {
-                tokio::time::sleep(Duration::from_millis(15 + req.id % 7)).await;
-                if !policy::take_retry(&self.retry_tokens) {
-                    return "retry-budget";
-                }
-                self.metrics.retries.fetch_add(1, Ordering::SeqCst);
-            }
-            let task = tokio::spawn(Arc::clone(self).attempt(upstream, req.clone(), attempt));
-            match timeout_at(self.deadline(start), task).await {
-                Ok(Ok(Ok(200))) => return "ok",
-                Ok(Ok(Ok(503))) => continue,
-                Ok(_) => return "upstream-error",
-                Err(_) => return "timeout",
-            }
+        let deadline = self.deadline(start);
+        if Instant::now() >= deadline {
+            return "timeout";
         }
-        "attempt-limit"
+        timeout_at(deadline, async {
+            for attempt in 0..3 {
+                if attempt > 0 {
+                    tokio::time::sleep(Duration::from_millis(15 + req.id % 7)).await;
+                    if !policy::take_retry(&self.retry_tokens) {
+                        return "retry-budget";
+                    }
+                    self.metrics.retries.fetch_add(1, Ordering::SeqCst);
+                }
+                match Arc::clone(self)
+                    .attempt(upstream, req.clone(), attempt)
+                    .await
+                {
+                    Ok(200) => return "ok",
+                    Ok(503) => continue,
+                    _ => return "upstream-error",
+                }
+            }
+            "attempt-limit"
+        })
+        .await
+        .unwrap_or("timeout")
     }
+
     pub async fn handle(self: &Arc<Self>, req: Request, upstream: SocketAddr) -> Reply {
         let start = Instant::now();
         let mut reply = Reply {
@@ -116,7 +126,14 @@ impl Gateway {
             return reply;
         };
         // REPAIR synchronization: separate policy access from upstream waiting.
-        let router = self.router.lock().await;
+        let router = match timeout_at(self.deadline(start), self.router.lock()).await {
+            Ok(router) => router,
+            Err(_) => {
+                reply.status = "timeout".into();
+                reply.total_us = start.elapsed().as_micros() as u64;
+                return reply;
+            }
+        };
         reply.queue_us = start.elapsed().as_micros() as u64;
         let route = Instant::now();
         reply.pool = router.route(req.tenant, &req.path);
@@ -125,10 +142,10 @@ impl Gateway {
             reply.status = "no-route".into();
             return reply;
         }
+        drop(router);
         let io = Instant::now();
         reply.status = self.call(upstream, &req, start).await.into();
         reply.upstream_us = io.elapsed().as_micros() as u64;
-        drop(router);
         let mut telemetry = self.buffer.lock().unwrap();
         telemetry.bytes.extend_from_slice(req.payload.as_bytes());
         telemetry.flush();

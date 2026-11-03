@@ -7,13 +7,14 @@ fn main() {
         .map(|v| v.parse().unwrap())
         .unwrap_or(1_000_003);
     assert!(large <= 10_000_000);
-    println!("length,sparse,sample,implementation,iterations,elapsed_ns,matched,total_latency");
+    println!("length,sparse,min_status,sample,implementation,iterations,elapsed_ns,matched,total_latency");
     for n in [7, 128, 4099, large] {
         for sparse in [false, true] {
             let c = fixture(n, sparse);
+            for min_status in [100, 500] {
             let q = Query {
                 min_latency: 50_000,
-                min_status: 500,
+                min_status,
             };
             let expected = scan_scalar(c.view(), q).unwrap();
             let funcs: [(&str, fn(Columns<'_>, Query) -> Result<Summary, Error>); 4] = [
@@ -34,10 +35,11 @@ fn main() {
                     }
                     let elapsed = start.elapsed().as_nanos();
                     println!(
-                        "{n},{sparse},{sample},{name},{iterations},{elapsed},{},{}",
+                        "{n},{sparse},{min_status},{sample},{name},{iterations},{elapsed},{},{}",
                         expected.matched, expected.total_latency
                     );
                 }
+            }
             }
         }
     }

@@ -1,7 +1,7 @@
 use day04_challenge::{
     Request,
     gateway::Gateway,
-    telemetry::{Event, summarize},
+    telemetry::{Event, summarize, summarize_simd},
     transport::{Fixture, request},
 };
 use std::{
@@ -17,6 +17,8 @@ fn percentile(values: &mut [u64], p: usize) -> u64 {
 #[tokio::main(flavor = "multi_thread", worker_threads = 2)]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<_> = std::env::args().collect();
+    let use_simd = std::env::var("TELEMETRY_IMPL").as_deref() == Ok("simd");
+    println!("telemetry_implementation={}", if use_simd { "simd" } else { "scalar" });
     let scenario = args.get(1).map(String::as_str).unwrap_or("healthy");
     assert!(
         ["healthy", "slow", "retry", "burst", "overload", "profile"].contains(&scenario),
@@ -116,7 +118,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             state.used,
             state.accepted,
             service.buffer.lock().unwrap().bytes.capacity(),
-            summarize(&events, 0)
+            if use_simd { summarize_simd(&events, 0) } else { summarize(&events, 0) }
         );
         drop(state);
         round += 1;

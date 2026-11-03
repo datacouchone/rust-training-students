@@ -17,3 +17,7 @@ Original starter files remain available. References are separate from participan
 ## 2026-11-03 — Day 4 cumulative afternoon
 
 Updated public Day 4 deck and [classroom setup](day04-classroom/README.md): cumulative memory and scan demos start at stage 0; focused 8B/8C labs and the three-repair final challenge retain their exercise tasks. Earlier worked examples through slide 16, original lab attempts and Day 5 materials are preserved.
+
+## 2026-11-03 — SIMD depth revision
+
+8C now contains three SIMD implementation tasks and focused tests. The final supplies gateway repairs and adds a SIMD event-record kernel, five transfer tests, workload-varied benchmarks and explicit service integration. Updated public slides and an eight-lane trace explain masks, widening, tails, layout and measurement. Original production labs and Day 5 are unchanged.

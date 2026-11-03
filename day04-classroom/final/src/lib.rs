@@ -1,3 +1,4 @@
+#![feature(portable_simd)]
 //! A deliberately faulty gateway; real loopback TCP, bounded fixture, no Docker.
 pub mod gateway;
 pub mod policy;

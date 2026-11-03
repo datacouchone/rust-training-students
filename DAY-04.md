@@ -46,3 +46,7 @@ The instructor has released [the completed examples and Lab 8A reference](DAY-04
 ## Four-hour afternoon
 
 Use [the cumulative demos and focused classroom labs](day04-classroom/README.md) for slides 17 onward. Original full labs remain available for follow-up.
+
+### SIMD implementation revision
+
+8C now requires masks, widened reduction and tails (40 minutes). The final supplies non-SIMD gateway repairs and asks you to implement, measure and integrate SIMD over event records (90 minutes). Start with [the SIMD guide](day04-classroom/SIMD-GUIDE.md).

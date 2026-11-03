@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
 """Bounded local classroom runner. No Docker, server installation or shell interpolation."""
 from pathlib import Path
-import argparse,subprocess,sys,time
+import argparse,subprocess,sys,time,os
 root=Path(__file__).resolve().parent
-p=argparse.ArgumentParser();p.add_argument('mode',choices=['baseline','acceptance','healthy','slow','retry','burst','overload','profile','sample']);p.add_argument('--clients',type=int,default=24);args=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('mode',choices=['baseline','acceptance','healthy','slow','retry','burst','overload','profile','sample','simd-test','simd-bench','healthy-simd']);p.add_argument('--clients',type=int,default=24);args=p.parse_args()
 if not 1<=args.clients<=64:p.error('--clients must be 1..64')
 cargo=['cargo','+nightly-2026-07-22']
 try:
+ if args.mode=='simd-test':
+  sys.exit(subprocess.run(cargo+['test','--manifest-path',str(root/'Cargo.toml'),'--offline','--locked','--test','simd_acceptance'],timeout=180).returncode)
+ if args.mode=='simd-bench':
+  sys.exit(subprocess.run(cargo+['run','--release','--manifest-path',str(root/'Cargo.toml'),'--offline','--locked','--bin','measure-telemetry'],timeout=180).returncode)
+ if args.mode=='healthy-simd':
+  os.environ['TELEMETRY_IMPL']='simd';args.mode='healthy'
  if args.mode in ('baseline','acceptance'):
-  result=subprocess.run(cargo+['test','--manifest-path',str(root/'Cargo.toml'),'--offline','--locked','--test',args.mode],timeout=180);sys.exit(result.returncode)
+  result=subprocess.run(cargo+['test','--manifest-path',str(root/'Cargo.toml'),'--offline','--locked','--test',args.mode]+(['--test','simd_acceptance'] if args.mode=='acceptance' else []),timeout=180);sys.exit(result.returncode)
  subprocess.run(cargo+['build','--release','--manifest-path',str(root/'Cargo.toml'),'--offline','--locked'],check=True,timeout=180)
  binary=root/'target/release/day04-challenge'
  if args.mode=='sample':

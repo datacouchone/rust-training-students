@@ -1,17 +1,18 @@
-# Investigation record
+# SIMD evidence record
 
-Record your machine, Rust toolchain, source revision, concurrency and command. Save raw output under `results/`. The smallest workload is a smoke test, not a performance result.
+CPU / OS / rustc -Vv / build flags / commit:
 
-| Workload | Symptom / measured outcome | Two possible explanations | Experiment that separates them | Repair evidence |
-|---|---|---|---|---|
-| healthy | | | | |
-| slow | | | | |
-| retry | | | | |
-| burst | | | | |
-| overload | | | | |
+1. Run healthy, slow and burst with supplied scalar telemetry. Record outcomes,
+   active attempts and retained capacity. Explain each result in one sentence.
+2. Predict one eight-event mask, its count and sum before running your SIMD kernel.
+3. Explain AoS packing, widening and the tail. Show the test that catches each bug.
+4. Record medians of seven samples for identical size/distribution/threshold cases.
 
-Before editing, answer: Is the time in queueing, routing, or the upstream path? What remains alive after a timeout? What changed despite a rejection? Which capacities remain after a flush? Does the summary describe the same rows as the scalar contract?
+| Rows | Distribution | Threshold | Scalar ns/scan | SIMD ns/scan | Explanation |
+|---|---|---|---|---|---|
+| | | | | | |
 
-After editing, compare identical workloads. Report outcome counts alongside latency; separate expired/rejected work from useful throughput. Keep a small-policy case where indexing may not pay back. Keep the original burst and timeout triggers as regressions. Explain one optimization you rejected.
-
-Release decision: proposed change, correctness evidence, effect on successful traffic, retained capacity, remaining limitation, and one metric that would stop a staged rollout. This exercise does not deploy a service.
+5. Run healthy-simd. Separate correctness/integration from timing evidence.
+6. Inspect emitted assembly or compare another lane width. State exactly what was
+   observed on this target; do not claim eight lanes imply one instruction.
+7. Recommend a candidate and one held-out workload to validate the decision.

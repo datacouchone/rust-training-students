@@ -95,8 +95,19 @@ pub fn scan_unrolled(c: Columns<'_>, q: Query) -> Result<Summary, Error> {
     Ok(out)
     // TASK_END unrolled
 }
+/// Build one predicate result per lane. All four conditions must hold.
+pub fn predicate_mask(latency: Simd<u32, 8>, status: Simd<u32, 8>, valid: Mask<i32, 8>, q: Query) -> Mask<i32, 8> {
+    // TASK_BEGIN mask
+    todo!("Combine validity, latency threshold, minimum status and maximum status 599")
+    // TASK_END mask
+}
+/// Mask out rejected lanes, then widen BEFORE reducing. Return count and total.
+pub fn reduce_selected(latency: Simd<u32, 8>, mask: Mask<i32, 8>) -> Summary {
+    // TASK_BEGIN reduction
+    todo!("Count selected lanes; select zero for other lanes; widen to u64; reduce")
+    // TASK_END reduction
+}
 pub fn scan_simd(c: Columns<'_>, q: Query) -> Result<Summary, Error> {
-    // TASK_BEGIN simd
     validate(c, q)?;
     let mut out = Summary::default();
     let bulk = c.latency.len() / 8 * 8;
@@ -106,35 +117,19 @@ pub fn scan_simd(c: Columns<'_>, q: Query) -> Result<Summary, Error> {
         let valid = Mask::<i32, 8>::from_array(std::array::from_fn(|lane| {
             c.validity[start / 8] & (1 << lane) != 0
         }));
-        let mask = valid
-            & latency.simd_ge(Simd::splat(q.min_latency))
-            & status.simd_ge(Simd::splat(q.min_status))
-            & status.simd_le(Simd::splat(599));
-        out.matched += mask.to_bitmask().count_ones() as u64;
-        let selected = mask.select(latency, Simd::splat(0)).cast::<u64>();
-        out.total_latency = out
-            .total_latency
-            .checked_add(selected.reduce_sum())
-            .ok_or(Error::Overflow)?;
+        let part = reduce_selected(latency, predicate_mask(latency, status, valid, q));
+        out.matched += part.matched;
+        out.total_latency = out.total_latency.checked_add(part.total_latency).ok_or(Error::Overflow)?;
     }
-    for i in bulk..c.latency.len() {
-        if selected(c, q, i) {
-            out.matched += 1;
-            out.total_latency = out
-                .total_latency
-                .checked_add(c.latency[i] as u64)
-                .ok_or(Error::Overflow)?;
-        }
-    }
+    // TASK_BEGIN tail
+    // Process indices bulk..len. Validity uses the GLOBAL index, not a tail-local index.
+    todo!("Finish the remaining rows using the same predicate and checked u64 accumulation");
+    // TASK_END tail
     Ok(out)
-    // TASK_END simd
 }
-/// Choose a threshold from measurements. Correctness is mandatory for either branch.
+/// Start with the SIMD candidate so tests exercise your kernel. Change only with evidence.
 pub fn scan_auto(c: Columns<'_>, q: Query) -> Result<Summary, Error> {
-    // TASK_BEGIN dispatch
-    todo!("Choose a measured implementation; preserve its validation and result")
-
-    // TASK_END dispatch
+    scan_simd(c, q)
 }
 pub struct OwnedColumns {
     pub latency: Vec<u32>,
