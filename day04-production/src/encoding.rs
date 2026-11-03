@@ -53,6 +53,12 @@ impl Encoder {
     }
     /// Returns bytes only when the WHOLE batch encoded successfully.
     /// A caller must finish writing these borrowed bytes before the next encode.
+    // The (|| { ... })() below defines a no-argument closure and calls it immediately.
+    // It runs here on the same thread; it does not spawn a task.
+    // A ? inside that closure returns an error from the closure into `result`,
+    // allowing the following error branch to reset any partially encoded output.
+    // Without this boundary, ? would return directly from encode and skip that cleanup.
+    // Only complete, successful output is returned as a borrow of self.buffer.
     pub fn encode(&mut self, events: &[Event], policy: Policy) -> io::Result<&[u8]> {
         self.reset(policy);
         let result = (|| {

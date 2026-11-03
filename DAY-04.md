@@ -38,3 +38,7 @@ python3 day04-challenge/run.py acceptance
 ```
 
 The starter compiles and passes a single-request real-TCP smoke test. Acceptance failures expose the intended defects. Read the challenge README for controlled slow/retry/burst/overload workloads and CPU sampling. No Docker is required. The private repair is not in this edition.
+
+## Worked code through slide 16
+
+The instructor has released [the completed examples and Lab 8A reference](DAY-04-THROUGH-SLIDE-16.md). The independent solution leaves your lab attempt in place.
