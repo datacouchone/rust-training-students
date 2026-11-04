@@ -34,3 +34,10 @@ Updated public Day 4 deck and [classroom setup](day04-classroom/README.md): cumu
 ## 2026-11-04 — Day 5 complete Lab 09 walkthrough (slide 18)
 
 [Complete Lab 09 reference](solutions/case09-complete/README.md) combines cancellation-safe framing, transactional accounting and tenant cardinality checks. All six original acceptance tests and the baseline pass. Independent workspace; the framing-only reference and participant attempts remain unchanged.
+
+
+## 2026-11-04 — Day 5 live incidents and native Linux task
+
+[Runnable incident demos](day05-incident-demo/README.md) reproduce deadlock, task leakage and panic boundaries over localhost TCP, with separate original/repaired implementations. Slides 23–30 now include runnable captures, regressions, retry, review and release evidence. [Linux evidence worksheet](day05-incident-demo/LINUX-EXERCISE.md) uses GDB to launch its own child and capture all-thread backtraces; macOS uses sample. No original participant exercise is replaced.
+
+Validation: five Rust regressions pass; all TCP comparisons, retry, release fixtures and macOS native capture were executed. Linux command construction, output validation and failure handling pass contract checks; a native Linux/GDB run remains unverified from the trainer's Mac. Captures are live thread evidence, not core dumps or tokio-console sessions.
