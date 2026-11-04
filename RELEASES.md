@@ -25,3 +25,7 @@ Updated public Day 4 deck and [classroom setup](day04-classroom/README.md): cumu
 ## 2026-11-04 — Day 5 worked demos through slide 10
 
 [Completed framing and cancellation demonstrations](solutions/day05-through-slide10/README.md): the slide 8 complete-frame reader, slide 9 interrupted-header reader and slide 10 interrupted-body reader, with unchanged input drivers. Independent workspace; participant starters and later exercises remain untouched.
+
+## 2026-11-04 — Day 5 references through slide 14
+
+[Six completed demonstrations](solutions/day05-through-slide14/README.md) cover slides 8–13. [Lab 09 framing reference](solutions/case09-framing/README.md) completes the decoder task from slide 14 and retains all original tests. Four framing acceptance tests pass; two accounting tests intentionally remain failing until the later accounting lesson. Participant attempts and later exercises are unchanged.
