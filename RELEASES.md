@@ -29,3 +29,8 @@ Updated public Day 4 deck and [classroom setup](day04-classroom/README.md): cumu
 ## 2026-11-04 — Day 5 references through slide 14
 
 [Six completed demonstrations](solutions/day05-through-slide14/README.md) cover slides 8–13. [Lab 09 framing reference](solutions/case09-framing/README.md) completes the decoder task from slide 14 and retains all original tests. Four framing acceptance tests pass; two accounting tests intentionally remain failing until the later accounting lesson. Participant attempts and later exercises are unchanged.
+
+
+## 2026-11-04 — Day 5 complete Lab 09 walkthrough (slide 18)
+
+[Complete Lab 09 reference](solutions/case09-complete/README.md) combines cancellation-safe framing, transactional accounting and tenant cardinality checks. All six original acceptance tests and the baseline pass. Independent workspace; the framing-only reference and participant attempts remain unchanged.
