@@ -50,14 +50,44 @@ pub fn linear(rules: &[Rule], tenant: u32, path: &str) -> Option<u16> {
 impl Index {
     pub fn compile(rules: &[Rule]) -> Result<Self, Error> {
         // TASK_BEGIN compile
-    todo!("Implement compile: see README contract and acceptance tests");
+        let mut entries: HashMap<String, Destinations> = HashMap::new();
+        for r in rules {
+            if !valid_path(&r.prefix) || (r.prefix.len() > 1 && r.prefix.ends_with('/')) {
+                return Err(Error::InvalidPrefix);
+            }
+            let entry = entries.entry(r.prefix.clone()).or_default();
+            let previous = if let Some(t) = r.tenant {
+                entry.tenants.insert(t, r.pool)
+            } else {
+                entry.fallback.replace(r.pool)
+            };
+            if previous.is_some() {
+                return Err(Error::Duplicate);
+            }
+        }
+        Ok(Self { entries })
         // TASK_END compile
     }
     /// The index owns a policy snapshot; later edits to the input do not mutate it.
     #[inline(never)]
     pub fn route(&self, tenant: u32, path: &str) -> Option<u16> {
         // TASK_BEGIN route
-    todo!("Implement route: see README contract and acceptance tests");
+        if !valid_path(path) {
+            return None;
+        }
+        let mut candidate = path;
+        loop {
+            if let Some(d) = self.entries.get(candidate) {
+                if let Some(pool) = d.tenants.get(&tenant).copied().or(d.fallback) {
+                    return Some(pool);
+                }
+            }
+            if candidate == "/" {
+                return None;
+            }
+            let slash = candidate.rfind('/').expect("absolute path");
+            candidate = if slash == 0 { "/" } else { &candidate[..slash] };
+        }
         // TASK_END route
     }
 }

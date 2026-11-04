@@ -2,7 +2,7 @@
 //! Cumulative classroom collector. Read STAGE before interpreting checks.
 //! Tickets may only be used with their originating Batch instance.
 #![allow(dead_code)]
-pub const STAGE: usize = 0;
+pub const STAGE: usize = 5;
 use std::{
     collections::{HashMap, hash_map::DefaultHasher},
     hash::{Hash, Hasher},
@@ -111,18 +111,62 @@ impl Batch {
     }
     pub fn push(&mut self, tenant: u32, path: &str, bytes: u64) -> Result<Ticket, Error> {
         // TASK_BEGIN push
-        let range = self.storage.len()..self.storage.len() + path.len();
-        self.storage.extend_from_slice(path.as_bytes());
-        self.unique += 1; // Stage 0: one stored path per row, including duplicates.
-        let ticket = Ticket { epoch: self.epoch, row: self.rows.len() };
-        self.rows.push(Row { tenant, path: range, bytes });
-        self.total = self.total.wrapping_add(bytes);
+        if !path.starts_with('/') {
+            return Err(Error::InvalidPath);
+        }
+        if self.rows.len() >= self.limits.rows {
+            return Err(Error::RowLimit);
+        }
+        let total = self.total.checked_add(bytes).ok_or(Error::Overflow)?;
+        let hash = (self.hash)(path);
+        let existing = self
+            .paths
+            .get(&hash)
+            .and_then(|ranges| {
+                ranges
+                    .iter()
+                    .find(|r| &self.storage[(*r).clone()] == path.as_bytes())
+            })
+            .cloned();
+        let range = if let Some(range) = existing {
+            range
+        } else {
+            if self.unique >= self.limits.paths {
+                return Err(Error::PathLimit);
+            }
+            let end = self
+                .storage
+                .len()
+                .checked_add(path.len())
+                .ok_or(Error::ByteLimit)?;
+            if end > self.limits.bytes {
+                return Err(Error::ByteLimit);
+            }
+            let range = self.storage.len()..end;
+            self.storage.extend_from_slice(path.as_bytes());
+            self.paths.entry(hash).or_default().push(range.clone());
+            self.unique += 1;
+            range
+        };
+        let ticket = Ticket {
+            epoch: self.epoch,
+            row: self.rows.len(),
+        };
+        self.rows.push(Row {
+            tenant,
+            path: range,
+            bytes,
+        });
+        self.total = total;
         Ok(ticket)
 
         // TASK_END push
     }
     pub fn get(&self, ticket: Ticket) -> Option<View<'_>> {
         // TASK_BEGIN get
+        if ticket.epoch != self.epoch {
+            return None;
+        }
         let r = self.rows.get(ticket.row)?;
         Some(View {
             tenant: r.tenant,
@@ -134,13 +178,23 @@ impl Batch {
     }
     pub fn reset(&mut self) -> Result<(), Error> {
         // TASK_BEGIN reset
+        let next = self.epoch.checked_add(1).ok_or(Error::EpochExhausted)?;
         self.rows.clear();
         self.storage.clear();
         self.paths.clear();
         self.unique = 0;
         self.total = 0;
+        self.epoch = next;
+        if self.storage.capacity() > self.limits.retain_bytes {
+            self.storage = Vec::new();
+        }
+        if self.rows.capacity() > self.limits.retain_rows {
+            self.rows = Vec::new();
+        }
+        if self.paths.capacity() > self.limits.retain_buckets {
+            self.paths = HashMap::new();
+        }
         Ok(())
-
         // TASK_END reset
     }
 }
@@ -177,3 +231,12 @@ pub fn fixture(rows: usize, unique: usize) -> Vec<(u32, String, u64)> {
         .collect()
 }
 // TASK_END cumulative
+
+// Insert /alpha -> hash 0 -> store /alpha
+// Insert /beta -> hash 0 -> reuse /alpha's positions
+// Read /beta's events -> its path incorrecly says /alpha
+// ACTUAL PATH TEXT MUST MATCH
+
+// hash 0:
+    // canditate 1 -> /alpha
+    // candidate 2 -> /beta

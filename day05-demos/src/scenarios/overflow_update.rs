@@ -80,10 +80,16 @@ impl Gateway {
         let (tenant, bytes) = text.split_once(':').ok_or(Reject::Shape)?;
         let tenant = tenant.parse::<u32>().map_err(|_| Reject::Number)?;
         let bytes = bytes.parse::<u64>().map_err(|_| Reject::Number)?;
-        let account = self.accounts.entry(tenant).or_default();
-        account.accepted = account.accepted.checked_add(1).ok_or(Reject::Overflow)?;
-        account.bytes = account.bytes.checked_add(bytes).ok_or(Reject::Overflow)?;
-        Ok(account.clone())
+        if !self.accounts.contains_key(&tenant) && self.accounts.len() >= self.max_tenants {
+            return Err(Reject::Cardinality);
+        }
+        let old = self.accounts.get(&tenant).cloned().unwrap_or_default();
+        let new = Account {
+            accepted: old.accepted.checked_add(1).ok_or(Reject::Overflow)?,
+            bytes: old.bytes.checked_add(bytes).ok_or(Reject::Overflow)?,
+        };
+        self.accounts.insert(tenant, new.clone());
+        Ok(new)
     }
 }
 pub fn frame(body: &[u8]) -> Vec<u8> {

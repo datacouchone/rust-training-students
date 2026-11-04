@@ -86,3 +86,22 @@ python3 day04-classroom/final/run.py healthy-simd
 ```
 
 The original full gateway challenge and original production labs remain available.
+
+
+Timing: median nanoseconds per scan across seven samples. Lower is better.
+
+| Workload | Stage 2: scalar candidate | Stage 3: SIMD candidate | Time reduction |
+|---|---:|---:|---:|
+| 128 rows, all valid | 125 ns | 58 ns               | 53.6% |
+| 128 rows, sparse validity | 75 ns | 58 ns          | 22.7% |
+| 4,096 rows, all valid | 2,678 ns | 1,971 ns        | 26.4% |
+| 4,096 rows, sparse validity | 2,673 ns | 2,050 ns  | 23.3% |
+
+Correctness: both stages returned the same results.
+
+| Workload | Matched rows, both stages | Total latency, both stages |
+|---|---:|---:|
+| 128 rows, all valid | 3 | 154,149 |
+| 128 rows, sparse validity | 0 | 0 |
+| 4,096 rows, all valid | 107 | 8,002,422 |
+| 4,096 rows, sparse validity | 26 | 1,941,732 |

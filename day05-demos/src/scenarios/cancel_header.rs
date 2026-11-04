@@ -32,19 +32,60 @@ impl Decoder {
         &mut self,
         reader: &mut R,
     ) -> io::Result<Option<Vec<u8>>> {
-        let mut header = [0u8; 4];
-        match reader.read_exact(&mut header).await {
-            Ok(_) => {}
-            Err(e) if e.kind() == io::ErrorKind::UnexpectedEof => return Ok(None),
-            Err(e) => return Err(e),
+        if self.poisoned {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "stream poisoned",
+            ));
         }
-        let n = u32::from_be_bytes(header) as usize;
-        if n > MAX_FRAME {
-            return Err(io::Error::new(io::ErrorKind::InvalidData, "frame limit"));
+        while self.header_read < 4 {
+            let n = match reader.read(&mut self.header[self.header_read..]).await {
+                Ok(n) => n,
+                Err(e) => {
+                    self.poisoned = true;
+                    return Err(e);
+                }
+            };
+            if n == 0 {
+                if self.header_read == 0 {
+                    return Ok(None);
+                }
+                self.poisoned = true;
+                return Err(io::Error::new(
+                    io::ErrorKind::UnexpectedEof,
+                    "partial header",
+                ));
+            }
+            self.header_read += n;
         }
-        let mut body = vec![0; n];
-        reader.read_exact(&mut body).await?;
-        Ok(Some(body))
+        if self.length.is_none() {
+            let n = u32::from_be_bytes(self.header) as usize;
+            if n > MAX_FRAME {
+                self.poisoned = true;
+                return Err(io::Error::new(io::ErrorKind::InvalidData, "frame limit"));
+            }
+            self.body.resize(n, 0);
+            self.length = Some(n);
+        }
+        while self.body_read < self.body.len() {
+            let n = match reader.read(&mut self.body[self.body_read..]).await {
+                Ok(n) => n,
+                Err(e) => {
+                    self.poisoned = true;
+                    return Err(e);
+                }
+            };
+            if n == 0 {
+                self.poisoned = true;
+                return Err(io::Error::new(io::ErrorKind::UnexpectedEof, "partial body"));
+            }
+            self.body_read += n;
+        }
+        let out = std::mem::take(&mut self.body);
+        self.header_read = 0;
+        self.body_read = 0;
+        self.length = None;
+        Ok(Some(out))
     }
 }
 #[derive(Debug, Default, PartialEq, Eq, Clone)]

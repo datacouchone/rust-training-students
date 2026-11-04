@@ -41,3 +41,13 @@ Updated public Day 4 deck and [classroom setup](day04-classroom/README.md): cumu
 [Runnable incident demos](day05-incident-demo/README.md) reproduce deadlock, task leakage and panic boundaries over localhost TCP, with separate original/repaired implementations. Slides 23–30 now include runnable captures, regressions, retry, review and release evidence. [Linux evidence worksheet](day05-incident-demo/LINUX-EXERCISE.md) uses GDB to launch its own child and capture all-thread backtraces; macOS uses sample. No original participant exercise is replaced.
 
 Validation: five Rust regressions pass; all TCP comparisons, retry, release fixtures and macOS native capture were executed. Linux command construction, output validation and failure handling pass contract checks; a native Linux/GDB run remains unverified from the trainer's Mac. Captures are live thread evidence, not core dumps or tokio-console sessions.
+
+## 2026-11-04 — classroom work and live diagnostic lab
+
+- Preserve the saved Day 4 cumulative demo stages and Day 5 classroom repairs.
+- Add slide 31, the quick Tokio Console/Linux core guide and launcher.
+- Pin tokio-console 0.1.13 for compatibility with console-subscriber 0.4.1.
+- Fix Docker workspace packaging for locked builds; compile with one Cargo job.
+- Keep previously published solutions and participant instructions. The final hackathon remains an exercise, not a claimed completed solution.
+
+Validation: Python syntax, six Cargo workspace manifests and the 38-slide deck were checked. The live viewer displayed twelve sleeping demo tasks; Docker captured and reopened a real Linux core before its image was removed for local storage cleanup. This publication does not claim every exercise test passes.

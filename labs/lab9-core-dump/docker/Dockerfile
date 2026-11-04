@@ -62,12 +62,21 @@ WORKDIR /workspace
 COPY Cargo.toml Cargo.lock rust-toolchain.toml /workspace/
 COPY prereq-check /workspace/prereq-check
 COPY lab9-core-dump/starter /workspace/lab9-core-dump/starter
+# Preserve every workspace member so --locked retains the checked-in resolution.
+COPY lab1-layout/starter /workspace/lab1-layout/starter
+COPY lab2-minivec/starter /workspace/lab2-minivec/starter
+COPY lab3-ffi/starter /workspace/lab3-ffi/starter
+COPY lab4-typestate/starter /workspace/lab4-typestate/starter
+COPY lab5-derive-macro/starter /workspace/lab5-derive-macro/starter
+COPY lab6-atomics/starter /workspace/lab6-atomics/starter
+COPY lab7-executor/starter /workspace/lab7-executor/starter
+COPY lab8-simd-perf/starter /workspace/lab8-simd-perf/starter
 
 # Debug info in release builds is already enabled at the workspace level
 # ([profile.release] debug = true in labs/Cargo.toml) -- that's what
 # makes the gdb walkthrough in analyze.md legible (symbol names, not just
 # addresses).
-RUN cargo build --locked --release -p lab9-core-dump-starter --bin lab9-core-dump-starter
+RUN cargo build -j 1 --locked --release -p lab9-core-dump-starter --bin lab9-core-dump-starter
 
 COPY lab9-core-dump/docker /workspace/lab9-core-dump/docker
 WORKDIR /workspace/lab9-core-dump/docker

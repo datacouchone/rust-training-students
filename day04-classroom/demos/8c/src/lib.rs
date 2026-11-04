@@ -2,7 +2,7 @@
 #![feature(portable_simd)]
 //! Predicate scan over telemetry columns with a least-significant-bit-first validity bitmap.
 //! Original classroom format inspired by Arrow's columnar/validity concepts, not Arrow IPC.
-pub const STAGE: usize = 0;
+pub const STAGE: usize = 6;
 #[allow(unused_imports)]
 use std::simd::{Mask, Select, Simd, cmp::SimdPartialOrd, num::SimdUint};
 #[derive(Clone, Copy)]
@@ -100,11 +100,34 @@ pub fn scan_unrolled(c: Columns<'_>, q: Query) -> Result<Summary, Error> {
 }
 pub fn scan_simd(c: Columns<'_>, q: Query) -> Result<Summary, Error> {
     // TASK_BEGIN simd
-    let selected_rows: Vec<u32> = (0..c.latency.len())
-        .filter(|&i| selected(c, q, i)).map(|i| c.latency[i]).collect();
-    let mut out = Summary { matched: selected_rows.len() as u64, total_latency: 0 };
-    for latency in selected_rows {
-        out.total_latency = out.total_latency.checked_add(latency as u64).ok_or(Error::Overflow)?;
+    validate(c, q)?;
+    let mut out = Summary::default();
+    let bulk = c.latency.len() / 8 * 8;
+    for start in (0..bulk).step_by(8) {
+        let latency = Simd::<u32, 8>::from_slice(&c.latency[start..start + 8]);
+        let status = Simd::<u32, 8>::from_slice(&c.status[start..start + 8]);
+        let valid = Mask::<i32, 8>::from_array(std::array::from_fn(|lane| {
+            c.validity[start / 8] & (1 << lane) != 0
+        }));
+        let mask = valid
+            & latency.simd_ge(Simd::splat(q.min_latency))
+            & status.simd_ge(Simd::splat(q.min_status))
+            & status.simd_le(Simd::splat(599));
+        out.matched += mask.to_bitmask().count_ones() as u64;
+        let selected = mask.select(latency, Simd::splat(0)).cast::<u64>();
+        out.total_latency = out
+            .total_latency
+            .checked_add(selected.reduce_sum())
+            .ok_or(Error::Overflow)?;
+    }
+    for i in bulk..c.latency.len() {
+        if selected(c, q, i) {
+            out.matched += 1;
+            out.total_latency = out
+                .total_latency
+                .checked_add(c.latency[i] as u64)
+                .ok_or(Error::Overflow)?;
+        }
     }
     Ok(out)
 
@@ -113,7 +136,8 @@ pub fn scan_simd(c: Columns<'_>, q: Query) -> Result<Summary, Error> {
 /// Choose a threshold from measurements. Correctness is mandatory for either branch.
 pub fn scan_auto(c: Columns<'_>, q: Query) -> Result<Summary, Error> {
     // TASK_BEGIN dispatch
-    scan_simd(c, q)
+    // Compare on your machine; scalar is a valid choice.
+    scan_scalar(c, q)
 
     // TASK_END dispatch
 }
@@ -146,3 +170,11 @@ pub fn fixture(n: usize, sparse: bool) -> OwnedColumns {
     }
 }
 // TASK_END cumulative
+
+// Selected values: [0,0,0,0,400,500,600,0]
+// Matched count: 3
+// Total latency: 1500
+
+
+// u32:MAX 4,294,967,295
+// 8 * u32::MAX = 34,359,738,360
