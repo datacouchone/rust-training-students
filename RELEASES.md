@@ -21,3 +21,7 @@ Updated public Day 4 deck and [classroom setup](day04-classroom/README.md): cumu
 ## 2026-11-03 — SIMD depth revision
 
 8C now contains three SIMD implementation tasks and focused tests. The final supplies gateway repairs and adds a SIMD event-record kernel, five transfer tests, workload-varied benchmarks and explicit service integration. Updated public slides and an eight-lane trace explain masks, widening, tails, layout and measurement. Original production labs and Day 5 are unchanged.
+
+## 2026-11-04 — Day 5 worked demos through slide 10
+
+[Completed framing and cancellation demonstrations](solutions/day05-through-slide10/README.md): the slide 8 complete-frame reader, slide 9 interrupted-header reader and slide 10 interrupted-body reader, with unchanged input drivers. Independent workspace; participant starters and later exercises remain untouched.
