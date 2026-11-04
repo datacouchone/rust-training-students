@@ -1,0 +1,7 @@
+[workspace]
+resolver = "2"
+members = ["case06-admission", "case06c-reserve", "case07-worker", "case07c-retry", "case08a-profile", "case08b-memory", "case08c-simd", "case09-incident"]
+[workspace.dependencies]
+tokio = { version = "=1.53.1", features = ["rt", "rt-multi-thread", "macros", "sync", "time", "test-util", "io-util"] }
+[profile.release]
+debug = true

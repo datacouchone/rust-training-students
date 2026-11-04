@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+"""Bounded local classroom runner. No Docker, server installation or shell interpolation."""
+from pathlib import Path
+import argparse,subprocess,sys,time,os
+root=Path(__file__).resolve().parent
+p=argparse.ArgumentParser();p.add_argument('mode',choices=['baseline','acceptance','healthy','slow','retry','burst','overload','profile','sample','simd-test','simd-bench','healthy-simd']);p.add_argument('--clients',type=int,default=24);args=p.parse_args()
+if not 1<=args.clients<=64:p.error('--clients must be 1..64')
+cargo=['cargo','+nightly-2026-07-22']
+try:
+ if args.mode=='simd-test':
+  sys.exit(subprocess.run(cargo+['test','--manifest-path',str(root/'Cargo.toml'),'--offline','--locked','--test','simd_acceptance'],timeout=180).returncode)
+ if args.mode=='simd-bench':
+  sys.exit(subprocess.run(cargo+['run','--release','--manifest-path',str(root/'Cargo.toml'),'--offline','--locked','--bin','measure-telemetry'],timeout=180).returncode)
+ if args.mode=='healthy-simd':
+  os.environ['TELEMETRY_IMPL']='simd';args.mode='healthy'
+ if args.mode in ('baseline','acceptance'):
+  result=subprocess.run(cargo+['test','--manifest-path',str(root/'Cargo.toml'),'--offline','--locked','--test',args.mode]+(['--test','simd_acceptance'] if args.mode=='acceptance' else []),timeout=180);sys.exit(result.returncode)
+ subprocess.run(cargo+['build','--release','--manifest-path',str(root/'Cargo.toml'),'--offline','--locked'],check=True,timeout=180)
+ binary=root/'target/release/day04-challenge'
+ if args.mode=='sample':
+  if sys.platform!='darwin':p.error('sample uses macOS; use profile with your native Linux profiler')
+  results=root/'results';results.mkdir(exist_ok=True)
+  with (results/'profile.log').open('w') as out:
+   child=subprocess.Popen([str(binary),'profile',str(args.clients),'20'],stdout=out,stderr=subprocess.STDOUT)
+   try:
+    time.sleep(.4)
+    if child.poll() is not None:raise RuntimeError('Workload exited before sampling; inspect results/profile.log')
+    subprocess.run(['/usr/bin/sample',str(child.pid),'3','1','-file',str(results/'cpu-sample.txt')],check=True,timeout=15)
+    code=child.wait(timeout=35)
+   finally:
+    if child.poll() is None:child.terminate();child.wait(timeout=5)
+  print('CPU sample:',results/'cpu-sample.txt');sys.exit(code)
+ sys.exit(subprocess.run([str(binary),args.mode,str(args.clients),'20'],timeout=40).returncode)
+except (subprocess.TimeoutExpired,subprocess.CalledProcessError,RuntimeError) as e:
+ print('Challenge command failed:',e,file=sys.stderr);sys.exit(1)

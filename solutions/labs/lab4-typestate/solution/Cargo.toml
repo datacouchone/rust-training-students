@@ -1,0 +1,9 @@
+[package]
+name = "lab4-typestate-solution"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[dev-dependencies]
+trybuild = { workspace = true }

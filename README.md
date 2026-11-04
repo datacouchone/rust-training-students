@@ -107,3 +107,7 @@ Follow each README for the pinned toolchain, setup and exact commands.
 Each challenge has setup tests, staged acceptance commands, hints, defense
 questions, rejected-caller fixtures and its own timer. Start with the baseline
 commands in each README. The participant implementation sections remain unfinished.
+
+## Complete lab solutions
+
+The [published solution index](solutions/README.md) includes Labs 1–9, production cases, Lab 8B/8C, the Day 4 final lab and the [Day 5 hackathon reference](solutions/day05-hackathon/README.md). Run them separately from your own exercise files.

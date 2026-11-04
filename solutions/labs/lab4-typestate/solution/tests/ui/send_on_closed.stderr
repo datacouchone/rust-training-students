@@ -1,0 +1,7 @@
+error[E0599]: no method named `send` found for struct `Socket<Closed>` in the current scope
+ --> tests/ui/send_on_closed.rs:9:12
+  |
+9 |     socket.send(b"nope");
+  |            ^^^^ method not found in `Socket<Closed>`
+  |
+  = note: the method was found for `Socket<Connected>`

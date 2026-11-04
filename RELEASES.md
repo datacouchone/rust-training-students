@@ -51,3 +51,7 @@ Validation: five Rust regressions pass; all TCP comparisons, retry, release fixt
 - Keep previously published solutions and participant instructions. The final hackathon remains an exercise, not a claimed completed solution.
 
 Validation: Python syntax, six Cargo workspace manifests and the 38-slide deck were checked. The live viewer displayed twelve sleeping demo tasks; Docker captured and reopened a real Linux core before its image was removed for local storage cleanup. This publication does not claim every exercise test passes.
+
+## 2026-11-04 — full lab reference solutions
+
+Published Labs 1–9, all production cases, Lab 8B/8C, Day 4 final/challenge references and the Day 5 Project Relay solution under `solutions/`. All seven solution suites passed native tests, including all 23 original hackathon acceptance tests. See `solutions/README.md` and `solutions/VALIDATION.md`. Existing participant exercises remain separate.
